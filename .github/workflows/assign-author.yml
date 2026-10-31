@@ -1,0 +1,23 @@
+name: assign-author
+
+on:
+  pull_request:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  assign:
+    runs-on: ubuntu-latest
+    # A fork's pull request gets a read-only token, which cannot assign anyone.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot' &&
+      github.event.pull_request.assignees[0] == null
+    steps:
+      - run: gh pr edit "$PR_URL" --add-assignee "$AUTHOR"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
