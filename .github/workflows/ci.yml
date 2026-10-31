@@ -20,6 +20,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/pnpm-install
       - run: pnpm run fmt:check
+      - run: pnpm run typecheck
+      - run: pnpm run test
 
   actionlint:
     runs-on: ubuntu-latest

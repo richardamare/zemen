@@ -1,0 +1,4 @@
+CREATE TABLE heartbeats (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ran_at TEXT NOT NULL
+);

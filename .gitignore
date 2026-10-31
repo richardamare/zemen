@@ -29,3 +29,7 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .playwright-mcp
 
 .private/
+
+.wrangler
+.dev.vars
+.devbox

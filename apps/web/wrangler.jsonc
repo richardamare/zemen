@@ -1,0 +1,16 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "zemen-staging",
+  "main": "src/worker.ts",
+  "compatibility_date": "2026-10-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "triggers": { "crons": ["*/2 * * * *"] },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "zemen-staging",
+      "database_id": "local",
+      "migrations_dir": "migrations"
+    }
+  ]
+}
