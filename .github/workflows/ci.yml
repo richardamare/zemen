@@ -31,7 +31,7 @@ jobs:
         with:
           terraform_version: 1.15.5
           terraform_wrapper: false
-      - working-directory: infra
+      - working-directory: deploy/terraform
         run: |
           terraform fmt -check -recursive
           terraform init -backend=false -input=false -lockfile=readonly

@@ -1,5 +1,5 @@
 name: terraform plan
-description: Loads an environment's Cloudflare credentials from 1Password, plans infra against its state bucket and summarizes the result.
+description: Loads an environment's Cloudflare credentials from 1Password, plans deploy/terraform against its state bucket and summarizes the result.
 
 inputs:
   op-service-account-token:
@@ -9,7 +9,7 @@ inputs:
     description: 1Password vault holding the cloudflare item.
     required: true
   environment:
-    description: Environment name passed to infra.
+    description: Environment name passed to deploy/terraform.
     required: true
   lock:
     description: Whether the plan takes the state lock. A plan token cannot write to the state bucket.
@@ -41,7 +41,7 @@ runs:
     # The repository is public, so the log carries only resource addresses and actions, plus tool output on failure.
     - id: plan
       shell: bash
-      working-directory: infra
+      working-directory: deploy/terraform
       env:
         TF_VAR_environment: ${{ inputs.environment }}
         LOCK: ${{ inputs.lock }}
@@ -56,7 +56,7 @@ runs:
         if [ "$code" -eq 1 ]; then cat "$log"; exit 1; fi
 
         {
-          echo '### infra'
+          echo '### deploy/terraform'
           echo
           terraform show -json tfplan | jq -r '(.resource_changes // [])[]
             | select(.change.actions != ["no-op"])

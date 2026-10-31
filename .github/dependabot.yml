@@ -19,7 +19,7 @@ updates:
         patterns: ["effect", "@effect/*"]
 
   - package-ecosystem: terraform
-    directory: /infra
+    directory: /deploy/terraform
     schedule:
       interval: weekly
       day: monday
