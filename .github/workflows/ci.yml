@@ -37,6 +37,23 @@ jobs:
           terraform init -backend=false -input=false -lockfile=readonly
           terraform validate -no-color
 
+  terraform-plan:
+    # Fork and Dependabot runs receive no environment secrets.
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    environment: staging-plan
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/terraform-plan
+        with:
+          op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          vault: zemen-staging-plan
+          environment: staging
+          lock: "false"
+
   actionlint:
     runs-on: ubuntu-latest
     steps:
@@ -47,7 +64,7 @@ jobs:
 
   # The ruleset requires only this job, so adding or renaming a job above never touches repository settings.
   ci-ok:
-    needs: [check, terraform, actionlint]
+    needs: [check, terraform, terraform-plan, actionlint]
     if: always()
     runs-on: ubuntu-latest
     steps:

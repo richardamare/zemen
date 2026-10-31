@@ -1,0 +1,27 @@
+name: terraform-drift
+
+on:
+  schedule:
+    - cron: "37 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    environment: staging-plan
+    steps:
+      - uses: actions/checkout@v7
+      - id: plan
+        uses: ./.github/actions/terraform-plan
+        with:
+          op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
+          vault: zemen-staging-plan
+          environment: staging
+          lock: "false"
+      - if: steps.plan.outputs.has-changes == 'true'
+        run: |
+          echo "::error::Live staging resources differ from the Terraform configuration."
+          exit 1

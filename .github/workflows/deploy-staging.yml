@@ -7,7 +7,7 @@ on:
       - apps/web/**
       - infra/**
       - pnpm-lock.yaml
-      - .github/actions/terraform-init/**
+      - .github/actions/terraform-plan/**
       - .github/workflows/deploy-staging.yml
   workflow_dispatch:
 
@@ -26,16 +26,23 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - uses: ./.github/actions/pnpm-install
-      - uses: ./.github/actions/terraform-init
+      - id: plan
+        uses: ./.github/actions/terraform-plan
         with:
           op-service-account-token: ${{ secrets.OP_SERVICE_ACCOUNT_TOKEN }}
           vault: zemen-staging-apply
+          environment: staging
+          lock: "true"
       # The repository is public, so tool output reaches the log only when a step fails.
-      - name: Apply infra
+      - if: steps.plan.outputs.has-changes == 'true'
+        name: Apply infra
         working-directory: infra
         run: |
-          terraform apply -input=false -no-color -auto-approve > "$RUNNER_TEMP/apply.log" 2>&1 \
+          terraform apply -input=false -no-color tfplan > "$RUNNER_TEMP/apply.log" 2>&1 \
             || { cat "$RUNNER_TEMP/apply.log"; exit 1; }
+      - name: Point wrangler at the database
+        working-directory: infra
+        run: |
           database_id="$(terraform output -raw database_id)"
           echo "::add-mask::$database_id"
           sed -i "s/\"database_id\": \"local\"/\"database_id\": \"$database_id\"/" ../apps/web/wrangler.jsonc

@@ -1,11 +1,6 @@
-variable "account_id" {
-  type      = string
-  sensitive = true
-}
-
-resource "cloudflare_d1_database" "staging" {
+resource "cloudflare_d1_database" "this" {
   account_id = var.account_id
-  name       = "zemen-staging"
+  name       = "zemen-${var.environment}"
 
   read_replication = {
     mode = "disabled"
@@ -14,9 +9,4 @@ resource "cloudflare_d1_database" "staging" {
   lifecycle {
     prevent_destroy = true
   }
-}
-
-output "database_id" {
-  sensitive = true
-  value     = cloudflare_d1_database.staging.id
 }
