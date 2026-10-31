@@ -6,7 +6,9 @@
   "scripts": {
     "prepare": "lefthook install",
     "fmt": "oxfmt",
-    "fmt:check": "oxfmt --check"
+    "fmt:check": "oxfmt --check",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck"
   },
   "devDependencies": {
     "@commitlint/cli": "21.2.3",
