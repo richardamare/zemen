@@ -23,6 +23,20 @@ jobs:
       - run: pnpm run typecheck
       - run: pnpm run test
 
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: 1.15.5
+          terraform_wrapper: false
+      - working-directory: infra
+        run: |
+          terraform fmt -check -recursive
+          terraform init -backend=false -input=false -lockfile=readonly
+          terraform validate -no-color
+
   actionlint:
     runs-on: ubuntu-latest
     steps:
@@ -33,7 +47,7 @@ jobs:
 
   # The ruleset requires only this job, so adding or renaming a job above never touches repository settings.
   ci-ok:
-    needs: [check, actionlint]
+    needs: [check, terraform, actionlint]
     if: always()
     runs-on: ubuntu-latest
     steps:
