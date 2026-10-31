@@ -10,7 +10,7 @@ terraform {
 
   # The bucket and endpoint name the account, so `terraform init` receives them from the environment's vault.
   backend "s3" {
-    key                         = "infra/terraform.tfstate"
+    key                         = "deploy/terraform/terraform.tfstate"
     region                      = "auto"
     use_lockfile                = true
     use_path_style              = true
