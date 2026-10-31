@@ -18,6 +18,18 @@ updates:
       effect:
         patterns: ["effect", "@effect/*"]
 
+  - package-ecosystem: terraform
+    directory: /deploy/terraform
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Prague
+    commit-message:
+      prefix: chore
+      include: scope
+    labels: [dependencies]
+
   - package-ecosystem: github-actions
     directories: ["/", "/.github/actions/*"]
     schedule:

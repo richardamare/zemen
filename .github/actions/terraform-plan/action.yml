@@ -1,0 +1,67 @@
+name: terraform plan
+description: Loads an environment's Cloudflare credentials from 1Password, plans deploy/terraform against its state bucket and summarizes the result.
+
+inputs:
+  op-service-account-token:
+    description: Service account token that can read the vault.
+    required: true
+  vault:
+    description: 1Password vault holding the cloudflare item.
+    required: true
+  environment:
+    description: Environment name passed to deploy/terraform.
+    required: true
+  lock:
+    description: Whether the plan takes the state lock. A plan token cannot write to the state bucket.
+    required: true
+
+outputs:
+  has-changes:
+    description: Whether the plan contains any change.
+    value: ${{ steps.plan.outputs.has-changes }}
+
+runs:
+  using: composite
+  steps:
+    - uses: hashicorp/setup-terraform@v4
+      with:
+        terraform_version: 1.15.5
+        terraform_wrapper: false
+    - uses: 1password/load-secrets-action@v5
+      with:
+        export-env: true
+      env:
+        OP_SERVICE_ACCOUNT_TOKEN: ${{ inputs.op-service-account-token }}
+        CLOUDFLARE_API_TOKEN: op://${{ inputs.vault }}/cloudflare/api_token
+        CLOUDFLARE_ACCOUNT_ID: op://${{ inputs.vault }}/cloudflare/account_id
+        TF_VAR_account_id: op://${{ inputs.vault }}/cloudflare/account_id
+        STATE_BUCKET: op://${{ inputs.vault }}/cloudflare/state_bucket
+        AWS_ACCESS_KEY_ID: op://${{ inputs.vault }}/cloudflare/r2_access_key_id
+        AWS_SECRET_ACCESS_KEY: op://${{ inputs.vault }}/cloudflare/r2_secret_access_key
+    # The repository is public, so the log carries only resource addresses and actions, plus tool output on failure.
+    - id: plan
+      shell: bash
+      working-directory: deploy/terraform
+      env:
+        TF_VAR_environment: ${{ inputs.environment }}
+        LOCK: ${{ inputs.lock }}
+      run: |
+        log="$RUNNER_TEMP/terraform.log"
+        terraform init -input=false -lockfile=readonly \
+          -backend-config="bucket=$STATE_BUCKET" \
+          -backend-config="endpoints={s3=\"https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com\"}" > "$log" 2>&1 \
+          || { cat "$log"; exit 1; }
+        code=0
+        terraform plan -input=false -no-color -lock="$LOCK" -detailed-exitcode -out=tfplan > "$log" 2>&1 || code=$?
+        if [ "$code" -eq 1 ]; then cat "$log"; exit 1; fi
+
+        {
+          echo '### deploy/terraform'
+          echo
+          terraform show -json tfplan | jq -r '(.resource_changes // [])[]
+            | select(.change.actions != ["no-op"])
+            | "- \(.address): \(.change.actions | join(", "))"'
+          if [ "$code" -eq 0 ]; then echo 'No changes.'; fi
+        } >> "$GITHUB_STEP_SUMMARY"
+
+        echo "has-changes=$([ "$code" -eq 2 ] && echo true || echo false)" >> "$GITHUB_OUTPUT"

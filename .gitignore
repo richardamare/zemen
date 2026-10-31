@@ -33,3 +33,9 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 .wrangler
 .dev.vars
 .devbox
+
+.terraform
+tfplan
+*.tfstate
+*.tfstate.*
+*.tfvars

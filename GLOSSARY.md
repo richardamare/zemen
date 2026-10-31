@@ -11,3 +11,7 @@ _Avoid_: Frontend, dashboard
 **Connector**:
 The MCP server that gives Claude access to the app.
 _Avoid_: Plugin, integration
+
+**Heartbeat**:
+A row the cron writes on each run, which shows the scheduled handler reached the database.
+_Avoid_: Ping, health check
