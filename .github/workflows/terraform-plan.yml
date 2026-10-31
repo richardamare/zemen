@@ -25,9 +25,9 @@ jobs:
       # The repository is public, so the log carries only resource addresses and actions.
       - working-directory: infra
         run: |
+          # shellcheck disable=SC2016
           terraform plan -input=false -no-color -lock=false -out=tfplan > "$RUNNER_TEMP/plan.log" 2>&1 \
             || { cat "$RUNNER_TEMP/plan.log"; exit 1; }
-          # shellcheck disable=SC2016
           terraform show -json tfplan | jq -r '(.resource_changes // [])[]
             | select(.change.actions != ["no-op"])
             | "- `\(.address)`: \(.change.actions | join(", "))"' > "$RUNNER_TEMP/summary.md"
