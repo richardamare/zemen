@@ -168,14 +168,14 @@ catalogs:
       specifier: 5.20261031.1
       version: 5.20261031.1
     '@effect/sql-d1':
-      specifier: 4.1.1
-      version: 4.1.1
+      specifier: 4.1.2
+      version: 4.1.2
     '@types/node':
       specifier: ^26.6.6
       version: 26.6.6
     effect:
-      specifier: 4.1.1
-      version: 4.1.1
+      specifier: 4.1.2
+      version: 4.1.2
     typescript:
       specifier: 7.0.2
       version: 7.0.2
@@ -210,10 +210,10 @@ importers:
     dependencies:
       '@effect/sql-d1':
         specifier: 'catalog:'
-        version: 4.1.1(effect@4.1.1)
+        version: 4.1.2(effect@4.1.2)
       effect:
         specifier: 'catalog:'
-        version: 4.1.1
+        version: 4.1.2
     devDependencies:
       '@cloudflare/workers-types':
         specifier: 'catalog:'
@@ -376,10 +376,10 @@ packages:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
     engines: {node: '>=12'}
 
-  '@effect/sql-d1@4.1.1':
-    resolution: {integrity: sha512-CQMOiw9bmj4ifsUA4KLwIgBJBMpPHaF3OYdXnA9oOxeEmD61+XDLkJUSA2mG7BWCIEZc7MquGxl3HuUVOeqtSA==}
+  '@effect/sql-d1@4.1.2':
+    resolution: {integrity: sha512-7uzFwDg/SQali/+Edp6H/t0nQSXtdDsNO8dHkC8xl45/YITJ6F5Os0pBZdXMCdtqehekhDM3qzTtJut4rLGcEA==}
     peerDependencies:
-      effect: ^4.1.1
+      effect: ^4.1.2
 
   '@emnapi/runtime@1.11.3':
     resolution: {integrity: sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==}
@@ -1176,8 +1176,8 @@ packages:
     resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
     engines: {node: '>=8'}
 
-  effect@4.1.1:
-    resolution: {integrity: sha512-XYu65BrcmNqu5i7PPvP4dqL+R5ma37zIsfuSPjcn78mog+6e5PkilNg7Xo+pBpjXJYlWEIpH4j91tMrfW05CMw==}
+  effect@4.1.2:
+    resolution: {integrity: sha512-d3Oah1WyKxFLFh19yWheS5IXIVaITzxZ71JkE1rkUozq/6EcJSU5nPk5bF2QrSygZ3SQoiNQB8TsxFriyMeMaQ==}
 
   emoji-regex@10.6.0:
     resolution: {integrity: sha512-toUI84YS5YmxW219erniWD0CIVOo46xGKColeNQRgOzDorgBi1v4D71/OFzgD9GO2UGKIv1C3Sp8DAn0+j5w7A==}
@@ -1861,10 +1861,10 @@ snapshots:
     dependencies:
       '@jridgewell/trace-mapping': 0.3.9
 
-  '@effect/sql-d1@4.1.1(effect@4.1.1)':
+  '@effect/sql-d1@4.1.2(effect@4.1.2)':
     dependencies:
       '@cloudflare/workers-types': 5.20261031.1
-      effect: 4.1.1
+      effect: 4.1.2
 
   '@emnapi/runtime@1.11.3':
     dependencies:
@@ -2336,7 +2336,7 @@ snapshots:
 
   detect-libc@2.1.2: {}
 
-  effect@4.1.1: {}
+  effect@4.1.2: {}
 
   emoji-regex@10.6.0: {}
 
